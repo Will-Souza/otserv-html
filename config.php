@@ -160,7 +160,7 @@ $config = array(
 	// list of towns
 	'towns' => array(
 		0 => 'No town',
-		1 => 'Sample town'
+		2 => 'Thais'
 	),
 
 	// guilds
@@ -214,7 +214,7 @@ $config = array(
 		'quests' => true,
 		'skills' => true,
 		'equipment' => true,
-		'frags' => true,
+		'frags' => false,
 		'deleted' => false, // should deleted characters from same account be still listed on the list of characters? When enabled it will show that character is "[DELETED]"
 	),
 	'quests' => array(), // quests list (displayed in character view), name => storage
