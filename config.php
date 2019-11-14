@@ -206,14 +206,14 @@ $config = array(
 	'characters' => array( // what things to display on character view page (true/false in each option)
 		'level' => true,
 		'experience' => false,
-		'magic_level' => true,
+		'magic_level' => false,
 		'balance' => false,
 		'marriage_info' => true, // only 0.3
 		'outfit' => true,
 		'creation_date' => true,
 		'quests' => true,
-		'skills' => true,
-		'equipment' => true,
+		'skills' => false,
+		'equipment' => false,
 		'frags' => false,
 		'deleted' => false, // should deleted characters from same account be still listed on the list of characters? When enabled it will show that character is "[DELETED]"
 	),
