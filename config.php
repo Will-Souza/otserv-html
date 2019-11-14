@@ -209,7 +209,7 @@ $config = array(
 		'magic_level' => false,
 		'balance' => false,
 		'marriage_info' => true, // only 0.3
-		'outfit' => true,
+		'outfit' => false,
 		'creation_date' => true,
 		'quests' => true,
 		'skills' => false,
@@ -218,7 +218,7 @@ $config = array(
 		'deleted' => false, // should deleted characters from same account be still listed on the list of characters? When enabled it will show that character is "[DELETED]"
 	),
 	'quests' => array(), // quests list (displayed in character view), name => storage
-	'signature_enabled' => true,
+	'signature_enabled' => false,
 	'signature_type' => 'tibian', // signature engine to use: tibian, mango, gesior
 	'signature_cache_time' => 5, // how long to store cached file (in minutes), default 5 minutes
 	'signature_browser_cache' => 60, // how long to cache by browser (in minutes), default 1 hour
