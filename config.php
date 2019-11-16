@@ -150,7 +150,7 @@ $config = array(
 
 	// town list used when creating character
 	// won't be displayed if there is only one item (rookgaard for example)
-	'character_towns' => array(1),
+	'character_towns' => array(2),
 
 	// characters lenght
 	// This is the minimum and the maximum length that a player can create a character. It is highly recommend the maximum lenght be 21.
