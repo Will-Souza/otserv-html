@@ -170,7 +170,7 @@ if(isset($_POST['town']) && isset($_POST['state']) && isset($_POST['order']) && 
             if(!empty($owner['name']))
                 $houseRent = 'Rented by ' . getPlayerLink($owner['name']);
             else
-                $houseRent = 'Free';
+                $houseRent = 'Auctioned';
         }
 
         $houses[] = array('owner' => $owner, 'name' => $house['name'], 'size' => $house['size'], 'rent' => $house['rent'], 'rentedBy' => $houseRent);
