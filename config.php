@@ -160,7 +160,19 @@ $config = array(
 	// list of towns
 	'towns' => array(
 		0 => 'No town',
-		2 => 'Thais'
+		1 => 'Venore',
+		2 => 'Thais',
+		3 => 'Kazordoon',
+		4 => 'Carlin',
+		5 => 'AbDendriel',
+		7 => 'Liberty Bay',
+		8 => 'Port Hope',
+		9 => 'Ankrahmun',
+		10 => 'Darashia',
+		11 => 'Edron',
+		12 => 'Svargrond',
+		13 => 'Yalahar',
+		33 => 'Rathleton'
 	),
 
 	// guilds
