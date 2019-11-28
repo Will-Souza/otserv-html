@@ -1,0 +1,14 @@
+{
+     "name": "First Tibia Global Layout",
+	 "description": "This is First Tibia Global Layout for MyAAC.",
+     "version": "1.0",
+	 "author": "Felipe Monteiro",
+	 "contact": "otland.net",
+	 "install": "plugins/tibiarl-template/install.php",
+	 "hooks": {
+		"Featured Article": {
+			"type": "TIBIACOM_ARTICLE",
+			"file": "plugins/tibiarl-template/article.php"
+		}
+	 }
+ }
