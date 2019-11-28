@@ -1,155 +1,194 @@
-<?PHP
-    $main_content .= '<form method="post" action=""><table>';
-    if(count($config['site']['worlds']) > 1)
-    {
-        if(isset($_POST['world']) and is_numeric($_POST['world']))
-        {
-            $wid = (int) $_POST['world'];
-            $wid = '<option value='.$wid.'>'.$config['site']['worlds'][$wid].'</option>';
-        }
-        $select_w .= '<tr><td>Select World:</td><td><select name="world" onchange="submit()">'.$wid.'';
-        $i=1;
-        foreach($config['site']['worlds'] as $id => $world_n)
-        {
-            if($_POST['world'] != $id)
-            {
-                $worlds[$i] .= '<option value="'.$id.'">'.$world_n.'</option>';
-            }
-            if($id == (int) $_POST['world'])
-            {
-                $world_id = $id;
-                $world_name = $world_n;
-            }
-            $i++;
-        }
-        
-        $main_content .= ''.$select_w.'';
-        for($i=0;$i <= count($config['site']['worlds']); $i++)
-        {
-            $main_content .= ''.$worlds[$i].'';
-        }
-        $main_content .= '</td></tr></select>';
-    }
+<?php
+/**
+ * Houses
+ *
+ * @package   MyAAC
+ * @author    Gesior <jerzyskalski@wp.pl>
+ * @author    Slawkens <slawkens@gmail.com>
+ * @author    whiteblXK
+ * @copyright 2019 MyAAC
+ * @link      https://my-aac.org
+ */
+defined('MYAAC') or die('Direct access not allowed!');
+$title = 'Houses';
 
-    if(!isset($world_id))
+$errors = array();
+if(!$db->hasColumn('houses', 'name')) {
+    $errors[] = 'Houses list is not available on this server.';
+
+    $twig->display('houses.html.twig', array(
+        'errors' => $errors
+    ));
+	return;
+}
+
+$rentType = trim(strtolower($config['lua']['houseRentPeriod']));
+if($rentType != 'yearly' && $rentType != 'monthly' && $rentType != 'weekly' && $rentType != 'daily')
+    $rentType = 'never';
+
+$state = '';
+$order = '';
+$type = '';
+
+if(isset($_GET['page']) && $_GET['page'] == 'view' && isset($_REQUEST['house']))
+{
+    $beds = array("", "one", "two", "three", "fourth", "fifth");
+    $houseName = $_REQUEST['house'];
+    $houseId = (Validator::number($_REQUEST['house']) ? $_REQUEST['house'] : -1);
+    $selectHouse = $db->query('SELECT * FROM ' . $db->tableName('houses') . ' WHERE ' . $db->fieldName('name') . ' LIKE ' . $db->quote($houseName) . ' OR `id` = ' . $db->quote($houseId));
+
+    $house = array();
+    if($selectHouse->rowCount() > 0)
     {
-        $world_id = 0;
-        $world_name = $config['server']['serverName'];
-    }
-    
-    if(count($towns_list) > 1)
-    {
-        if(isset($_POST['town']) and is_numeric($_POST['town']))
-        {
-            $pid = (int) $_POST['town'];
-            $pid = '<option value='.$pid.'>'.$towns_list[$world_id][$pid].'</option>';
+        $house = $selectHouse->fetch();
+        $houseId = $house['id'];
+
+        $title = $house['name'] . ' - ' . $title;
+
+        $imgPath = 'images/houses/' . $houseId . '.gif';
+        if(!file_exists($imgPath)) {
+            $imgPath = 'images/houses/default.jpg';
         }
+
+        $bedsMessage = null;
+        $houseBeds = $house['beds'];
+        if($houseBeds > 0)
+            $bedsMessage = 'House have ' . (isset($beds[$houseBeds]) ? $beds[$houseBeds] : $houseBeds) . ' bed' . ($houseBeds > 1 ? 's' : '');
         else
-        {
-            $pid = '<option value="all">[ALL]</option>';
-            $all=true;
-        }
-        $select .= '<tr><td>Select City:</td><td><select name="town" onchange="submit()">'.$pid.'';
-        $i=1;
-        foreach($towns_list[$world_id] as $id => $town_n)
-        {
-            if($_POST['town'] != $id)
-            {
-                $towns[$i] .= '<option value="'.$id.'">'.$town_n.'</option>';
-            }
-            if($id == (int) $_POST['town'])
-            {
-                $town_id = $id;
-                $town_name = $town_n;
-            }
-            $i++;
-        }
+            $bedsMessage = 'This house dont have any beds';
 
-        $main_content .= ''.$select.'';
-        for($i=1;$i <= count($towns_list[$world_id]); $i++)
+        $houseOwner = $house['owner'];
+        if($houseOwner > 0)
         {
-            $main_content .= ''.$towns[$i].'';
-        }
-        if(!$all)
-            $main_content .= '<option value="all">[ALL]</option>';
-            
-        $main_content .= '</td></tr></select>';
-    }
-    if(isset($town_id))
-    {
-        $a_status = array(1 => "Empty", "Rented", "[ALL]");
-        
-        if(isset($_POST['status']) and is_numeric($_POST['status']))
-        {
-            $sid = (int) $_POST['status'];
-            $sid = '<option value='.$sid.'>'.$a_status[$sid].'</option>';
-            if($_POST['status'] == 1)
-                $s[1] = true;
-            elseif($_POST['status'] == 2)
-                $s[2] = true;
-            elseif($_POST['status'] == 3)
-                $s[3] = true;
-        }
-        $main_content .= '<tr><td>Select by status:</td><td><select name="status" onchange="submit()">'.$sid.'';
-        if(!$s[3])
-            $main_content .= '<option value="3">[ALL]</opyion>';
-        if(!$s[2])
-            $main_content .= '<option value="2">Rented</option>';
-        if(!$s[1])
-            $main_content .= '<option value="1">Empty</option>';
-        $main_content .= '</td></tr></select>';
-        
-    }
-        
-    $main_content .= '</table></form>';
-    
-    if(isset($_POST['status']))
-    {
-        if($_POST['status'] == 1)
-            $stat = "and `owner` = ''";
-        elseif($_POST['status'] == 2)
-            $stat = "and `owner` > 0";
-    }
-    
-    if(!isset($town_id))
-    {
-        $houses_info = $SQL->query("SELECT * FROM `houses` WHERE `world_id` = ".$world_id." ORDER BY `town` , `name`");
-        $towns_all = true;
-    }
-    
-    $main_content .= '<h2>Houses on '.$config['site']['worlds'][(int) $_GET['world']].'</h2>';
-    $main_content .= '<table><tr bgcolor="'.$config['site']['vdarkborder'].'"><td><font color="white"><b>Address</b></font></td><td><font color="white"><b>Size</b></font></td><td><font color="white"><b>Price</b></font></td><td><font color="white"><b>City</b></font></td><td><font color="white"><b>Status</b></font></td></tr>';
-    $number_of_rows = 1;
-    if(!$towns_all)
-        $houses_info = $SQL->query("SELECT * FROM `houses` WHERE `world_id` = ".$world_id." and `town` = ".$town_id." ".$stat." ORDER BY `name`");
-    $players_info = $SQL->query("SELECT `houses`.`id` AS `houseid` , `players`.`name` AS `ownername` , `accounts`.`premdays` AS `premdays` , `accounts`.`lastday` AS `lastlogin` FROM `houses` , `players` , `accounts` WHERE `players`.`id` = `houses`.`owner` AND `accounts`.`id` = `players`.`account_id`");
-    $players = array();
-    foreach($players_info->fetchAll() as $player)
-        $players[$player['houseid']] = array('name' => $player['ownername'], 'days' => $player['premdays'], 'last' => $player['lastlogin']);
-    foreach($houses_info->fetchAll() as $house)
-    {
-        $owner = $players[$house['id']];
-        if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-        $main_content .= '<tr bgcolor="'.$bgcolor.'"><td>'.$house['name'].'</td><td align="right" width="35">'.$house['size'].'</td><td align="right" width="65">'.($house['price'] / 1000).'k gp</td><td>'.$towns_list[(int) $house['world_id']][(int) $house['town']].'</td><td>';
-        if(!empty($owner['name']))
-        {   
-            if($owner['deleted'] > 0)
-                $status='<font color=red><b>[DELETED]</b></font>';
-                
-            if(isPremium($owner['days'], $owner['last']))
+            $guild = NULL;
+            $owner = null;
+            if(isset($house['guild']) && $house['guild'] == 1)
             {
-                $main_content .= 'Rented by <a href="?subtopic=characters&name='.urlencode($owner['name']).'">'.$owner['name'].'</a>'.$status.'';
+                $guild = new OTS_Guild();
+                $guild->load($houseOwner);
+                $owner = getGuildLink($guild->getName());
             }
             else
+                $owner = getCreatureName($houseOwner);
+
+            if($rentType != 'never' && $house['paid'] > 0)
             {
-                $main_content .= 'Rented by <a href="?subtopic=characters&name='.urlencode($owner['name']).'">'.$owner['name'].'</a>'.$status.' (FACC)';
+                $who = '';
+                if($guild)
+                    $who = $guild->getName();
+                else
+                {
+                    $player = new OTS_Player();
+                    $player->load($houseOwner);
+                    if($player->isLoaded())
+                    {
+                        $sexs = array('She', 'He');
+                        $who = $sexs[$player->getSex()];
+                    }
+                }
+                $owner .= ' ' . $who . ' has paid the rent until ' . date("M d Y, H:i:s", $house['paid']) . ' CEST.';
             }
+        }
+    }
+    else
+        $errors[] =  'House with name ' . $houseName . ' does not exists.';
+
+    $twig->display('houses.view.html.twig', array(
+        'errors' => $errors,
+        'imgPath' => isset($imgPath) ? $imgPath : null,
+        'houseName' => isset($house['name']) ? $house['name'] : null,
+        'bedsMessage' => isset($bedsMessage) ? $bedsMessage : null,
+        'houseSize' => isset($house['size']) ? $house['size'] : null,
+        'houseRent' => isset($house['rent']) ? $house['rent'] : null,
+        'owner' => isset($owner) ? $owner : null,
+        'rentType' => isset($rentType) ? $rentType : null
+    ));
+
+    if (count($errors) > 0) {
+        return;
+    }
+}
+
+$cleanOldHouse = null;
+if(isset($config['lua']['houseCleanOld'])) {
+    $cleanOldHouse = (int)(eval('return ' . $config['lua']['houseCleanOld'] . ';') / (24 * 60 * 60));
+}
+
+$housesSearch = false;
+if(isset($_POST['town']) && isset($_POST['state']) && isset($_POST['order']) && (isset($_POST['type']) || !$db->hasColumn('houses', 'guild')))
+{
+    $townName = $config['towns'][$_POST['town']];
+    $order = $_POST['order'];
+    $orderby = '`name`';
+    if(!empty($order))
+    {
+        if($order == 'size')
+            $orderby = '`size`';
+        else if($order == 'rent')
+            $orderby = '`rent`';
+    }
+
+    $town = 'town';
+    if($db->hasColumn('houses', 'town_id'))
+        $town = 'town_id';
+    else if($db->hasColumn('houses', 'townid'))
+        $town = 'townid';
+
+    $whereby = '`' . $town . '` = ' .(int)$_POST['town'];
+    $state = $_POST['state'];
+    if(!empty($state))
+        $whereby .= ' AND `owner` ' . ($state == 'free' ? '' : '!'). '= 0';
+
+    $type = isset($_POST['type']) ? $_POST['type'] : NULL;
+    if($type == 'guildhalls' && !$db->hasColumn('houses', 'guild'))
+        $type = 'all';
+
+    if(!empty($type) && $type != 'all')
+        $whereby .= ' AND `guild` ' . ($type == 'guildhalls' ? '!' : '') . '= 0';
+
+    $houses_info = $db->query('SELECT * FROM `houses` WHERE ' . $whereby. ' ORDER BY ' . $orderby);
+
+    $players_info = $db->query("SELECT `houses`.`id` AS `houseid` , `players`.`name` AS `ownername` FROM `houses` , `players` , `accounts` WHERE `players`.`id` = `houses`.`owner` AND `accounts`.`id` = `players`.`account_id`");
+    $players = array();
+    foreach($players_info->fetchAll() as $player)
+        $players[$player['houseid']] = array('name' => $player['ownername']);
+
+    $houses = array();
+    foreach($houses_info->fetchAll() as $house)
+    {
+        $owner = isset($players[$house['id']]) ? $players[$house['id']] : array();
+
+        $houseRent = null;
+        if($db->hasColumn('houses', 'guild') && $house['guild'] == 1 && $house['owner'] != 0)
+        {
+            $guild = new OTS_Guild();
+            $guild->load($house['owner']);
+            $houseRent = 'Rented by ' . getGuildLink($guild->getName());
         }
         else
         {
-            $main_content .= 'Empty';
+            if(!empty($owner['name']))
+                $houseRent = 'Rented by ' . getPlayerLink($owner['name']);
+            else
+                $houseRent = 'Free';
         }
-        $main_content .= '</td></tr>';
+
+        $houses[] = array('owner' => $owner, 'name' => $house['name'], 'size' => $house['size'], 'rent' => $house['rent'], 'rentedBy' => $houseRent);
     }
-    $main_content .= '</TABLE>';
-?>
+
+    $housesSearch = true;
+}
+
+$guild = $db->hasTable('houses', 'guild') ? ' or guildhall' : '';
+$twig->display('houses.html.twig', array(
+    'state' => $state,
+    'order' => $order,
+    'type' => $type,
+    'houseType' => $type == 'guildhalls' ? 'Guildhalls' : 'Houses and Flats',
+    'townName' => isset($townName) ? $townName : null,
+    'townId' => isset($_POST['town']) ? $_POST['town'] : null,
+    'guild' => $guild,
+    'cleanOldHouse' => isset($cleanOld) ? $cleanOld : null,
+    'housesSearch' => $housesSearch,
+    'houses' => isset($houses) ? $houses : null
+));
