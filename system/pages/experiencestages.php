@@ -100,7 +100,7 @@ echo '<div style="text-align:center"><h3>Skill stages</h3></div>
 			<tr bgcolor="'.$config['lightborder'].'"><td><b>Level</b></td><td><b>Stage</b></td></tr>';
 	foreach($skillstages->getElementsByTagName('skill') as $skillstage)
 	{
-		$maxlevel = $skillstage->getAttribute('maxskill');
+		$maxskill = $skillstage->getAttribute('maxskill');
 	echo '<tr bgcolor="'.$config['lightborder'].'">
 	<td>'.$skillstage->getAttribute('minskill') . '-'. (isset($maxskill[0]) ? $maxskill : '*') . '</td><td>x'.$skillstage->getAttribute('multiplier').'</td>
 </tr>';
@@ -143,9 +143,9 @@ echo '<div style="text-align:center"><h3>Magic stages</h3></div>
 			<tr bgcolor="'.$config['lightborder'].'"><td><b>Level</b></td><td><b>Stage</b></td></tr>';
 	foreach($magicstages->getElementsByTagName('ml') as $magicstage)
 	{
-		$maxlevel = $magicstage->getAttribute('maxmagic');
+		$maxml = $magicstage->getAttribute('maxmagic');
 	echo '<tr bgcolor="'.$config['lightborder'].'">
-	<td>'.$magicstage->getAttribute('minmagic') . '-'. (isset($maxskill[0]) ? $maxskill : '*') . '</td><td>x'.$magicstage->getAttribute('multiplier').'</td>
+	<td>'.$magicstage->getAttribute('minmagic') . '-'. (isset($maxml[0]) ? $maxml : '*') . '</td><td>x'.$magicstage->getAttribute('multiplier').'</td>
 </tr>';
 }
 	echo '
