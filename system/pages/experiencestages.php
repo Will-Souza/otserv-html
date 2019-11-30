@@ -153,5 +153,4 @@ echo '<div style="text-align:center"><h3>Magic stages</h3></div>
 	</td></tr>
 </tbody></table>';
 ?>
-?>
 
