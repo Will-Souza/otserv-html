@@ -66,4 +66,50 @@ echo '<div style="text-align:center"><h3>Experience stages</h3></div>
 		</tbody></table>
 	</td></tr>
 </tbody></table>';
+
+
+$title = 'Skill Stages';
+
+if(file_exists($config['data_path'] . 'XML/skillstages.xml')) {
+	$skillstages = new DOMDocument();
+	$skillstages->load($config['data_path'] . 'XML/skillstages.xml');
+}
+
+if(!isset($config['lua']['experienceStages']) || !getBoolean($config['lua']['experienceStages']))
+{
+	$enabled = false;
+
+	if(isset($skillstages)) {
+		foreach($skillstages->getElementsByTagName('skills') as $node) {
+			if($node->getAttribute('enabled'))
+				$enabled = true;
+		}
+	}
+}
+
+if(!$skillstages)
+{
+	echo 'Error: cannot load <b>skillstages.xml</b>!';
+	return;
+}
+
+echo '<div style="text-align:center"><h3>Experience stages</h3></div>
+<table bgcolor="'.$config['darkborder'].'" border="0" cellpadding="4" cellspacing="1" width="100%"><tbody>
+	<tr bgcolor="'.$config['vdarkborder'].'">
+		<td class="white" colspan="5"><b>Stages table</b></td>
+	</tr>
+	<tr><td>
+		<table border="0" cellpadding="2" cellspacing="1" width="100%"><tbody>
+			<tr bgcolor="'.$config['lightborder'].'"><td><b>Level</b></td><td><b>Stage</b></td></tr>';
+	foreach($skillstages->getElementsByTagName('skill') as $skillstage)
+	{
+		$maxlevel = $skillstage->getAttribute('maxlevel');
+	echo '<tr bgcolor="'.$config['lightborder'].'">
+	<td>'.$skillstage->getAttribute('minlevel') . '-'. (isset($maxlevel[0]) ? $maxlevel : '*') . '</td><td>x'.$skillstage->getAttribute('multiplier').'</td>
+</tr>';
+}
+	echo '
+		</tbody></table>
+	</td></tr>
+</tbody></table>';
 ?>
