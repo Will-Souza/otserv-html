@@ -55,7 +55,6 @@ foreach($groupList as $id => $group)
 		$members[] = array(
 			'group_name' => $group->getName(),
 			'player' => $member,
-			'outfit' => $config['team_display_outfit'] ? $config['outfit_images_url'] . '?id=' . $member->getLookType() . ($outfit_addons ? '&addons=' . $member->getLookAddons() : '') . '&head=' . $member->getLookHead() . '&body=' . $member->getLookBody() . '&legs=' . $member->getLookLegs() . '&feet=' . $member->getLookFeet() : null,
 			'status' => $config['team_display_status'] ? $member->isOnline() : null,
 			'link' => getPlayerLink($member->getName()),
 			'flag_image' => $config['account_country'] ? getFlagImage($member->getAccount()->getCountry()) : null,
