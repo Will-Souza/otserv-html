@@ -9,5 +9,11 @@
  */
 $title = 'Downloads';
 
-$twig->display('downloads.html.twig');
+// $twig->display('downloads.html.twig');
 ?>
+<br/><br/>
+<div style="text-align:center">
+	We're using official Tibia Client <strong>12</strong><br/>
+	<p>Download Tibia client 12 for windows <a href="{{ config.client_download }}">HERE</a>.</p>
+
+</div>
