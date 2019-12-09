@@ -9,12 +9,13 @@
 			<div class="BoxContent" style="background-image: url(templates/tibiacom/images/content/scroll.gif);">
 																				<div id="TickerEntry-0" class="Row" onclick='TickerAction("TickerEntry-0")'>
 					<div class="Odd">
-					<div class="NewsTickerIcon" style="background-image: url(templates/tibiacom/images/news/icon_3_small.gif);"></div>
+					<div class="NewsTickerIcon" style="background-image: url(templates/tibiacom/images/news/icon_1_small.gif);"></div>
 					<div id="TickerEntry-0-Button" class="NewsTickerExtend" style="background-image: url(templates/tibiacom/images/general/plus.gif);"></div>
 					<div class="NewsTickerText">
 						<span class="NewsTickerDate">9 Nov 2019 -</span>
-						<div id="TickerEntry-0-ShortText" class="NewsTickerShortText">https://my-aac.org</div>
-						<div id="TickerEntry-0-FullText" class="NewsTickerFullText">https://my-aac.org
+						<div id="TickerEntry-0-ShortText" class="NewsTickerShortText">Ja realizamos diversas corre&ccedil;&otilde;es, por&eacute;m ainda precisamos da sua...</div>
+						<div id="TickerEntry-0-FullText" class="NewsTickerFullText"><p>Ja realizamos diversas corre&ccedil;&otilde;es, por&eacute;m ainda precisamos da sua ajuda.</p>
+<p>Reporte sempre que encontrar um bug.</p>
 													</div>
 					</div>
 				</div>

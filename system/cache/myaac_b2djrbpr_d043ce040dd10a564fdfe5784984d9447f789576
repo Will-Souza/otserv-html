@@ -1,1 +1,1 @@
-a:5:{s:8:"accounts";b:1;s:21:"myaac_account_actions";b:1;s:7:"z_forum";b:0;s:7:"players";b:1;s:14:"players_online";b:1;}
+a:17:{s:8:"accounts";b:1;s:21:"myaac_account_actions";b:1;s:7:"z_forum";b:0;s:7:"players";b:1;s:14:"players_online";b:1;s:6:"groups";b:0;s:12:"account_bans";b:1;s:13:"guild_members";b:0;s:14:"player_killers";b:0;s:6:"houses";b:1;s:6:"guilds";b:1;s:18:"z_ots_comunication";b:1;s:17:"z_shop_categories";b:1;s:14:"z_shop_history";b:1;s:12:"z_shop_offer";b:1;s:15:"crypto_payments";b:1;s:22:"pagseguro_transactions";b:1;}
