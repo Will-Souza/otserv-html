@@ -8,12 +8,12 @@
 global $config;
 $PagSeguroConfig = array();
 
-$PagSeguroConfig['environment'] = $config['pagSeguro']['environment']; // production, sandbox
+$PagSeguroConfig['environment'] = $config['pagseguro']['environment']; // production, sandbox
 
 $PagSeguroConfig['credentials'] = array();
-$PagSeguroConfig['credentials']['email'] = $config['pagSeguro']['email'];
-$PagSeguroConfig['credentials']['token']['production'] = $config['pagSeguro']['token']['production'];
-$PagSeguroConfig['credentials']['token']['sandbox'] = $config['pagSeguro']['token']['sandbox'];
+$PagSeguroConfig['credentials']['email'] = $config['pagseguro']['email'];
+$PagSeguroConfig['credentials']['token']['production'] = $config['pagseguro']['token']['production'];
+$PagSeguroConfig['credentials']['token']['sandbox'] = $config['pagseguro']['token']['sandbox'];
 
 $PagSeguroConfig['application'] = array();
 $PagSeguroConfig['application']['charset'] = "UTF-8"; // UTF-8, ISO-8859-1

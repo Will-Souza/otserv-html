@@ -1,52 +1,81 @@
 <?php
 /**
- * Automatic PagSeguro payment system gateway.
+ * This is shop system taken from Gesior, modified for MyAAC.
  *
- * @name      myaac-pagseguro
- * @author    Ivens Pontes <ivenscardoso@hotmail.com>
+ * @name      myaac-gesior-shop-system
+ * @author    Gesior <jerzyskalski@wp.pl>
  * @author    Slawkens <slawkens@gmail.com>
- * @website   github.com/slawkens/myaac-pagseguro
- * @website   github.com/ivenspontes/
+ * @website   github.com/slawkens/myaac-gesior-shop-system
  */
 defined('MYAAC') or die('Direct access not allowed!');
+$title = 'Points';
 
-require_once(PLUGINS . 'pagseguro/config.php');
+require_once(LIBS . 'shop-system.php');
+require_once(PLUGINS . 'gesior-shop-system/config.php');
 $twig->addGlobal('config', $config);
 
-if(!isset($config['pagSeguro']) || !count($config['pagSeguro']) || !count($config['pagSeguro']['options'])) {
-	echo "PagSeguro is disabled. If you're an admin please configure this script in config.local.php.";
+if(!$config['gifts_system'])
+{
+	if(!admin())
+	{
+		echo 'The gifts system is disabled there, sorry.';
+		return;
+	}
+	else
+		warning("You're able to access this page but it is disabled for normal users.<br/>
+		Its enabled for you so you can view/edit shop offers before displaying them to use.<br/>
+		You can enable it by editing this line in myaac config.local.php file:<br/>
+		<p style=\"margin-left: 3em;\"><b>\$config['gifts_system'] = true;</b></p>");
+}
+
+if(GesiorShop::getDonationType() == 'coins' && !fieldExist('coins', 'accounts')) {
+	error("Your server doesn't support accounts.coins. Please change back config.donation_type to points.");
 	return;
 }
 
-if(!extension_loaded('curl')) {
-	error("cURL php extension is not loaded, please install it with following command (on linux):" . "<br/>" .
-	"sudo apt-get install php5-curl" . "<br/>" .
-	"sudo service apache2 restart" . "<br/><br/>" .
-	"for XAMPP (Windows) you need to uncomment (Remove selicolon - ;) this line in your php.ini:" . "<br/>" .
-	";extension=php_curl.dll");
+if(!$logged) {
+	$was_before = $config['friendly_urls'];
+	$config['friendly_urls'] = true;
+
+	echo 'To buy points you need to be logged. ' . generateLink(getLink('?subtopic=accountmanagement') . '&redirect=' . urlencode(BASE_URL . '?subtopic=points'), 'Login first') . '.';
+
+	$config['friendly_urls'] = $was_before;
 	return;
 }
 
-$is_localhost = strpos(BASE_URL, 'localhost') !== false || strpos(BASE_URL, '127.0.0.1') !== false;
-if($is_localhost) {
-	warning("PagSeguro is not supported on localhost (" . BASE_URL . "). Please change your domain to public one and visit this site again later.<br/>
-	This site is visible, but you can't donate.");
-}
+$enabled = array(
+	'paypal' => isset($config['paypal']) && $config['paypal']['disabled'],
+	'fortumo' => isset($config['fortumo']) && $config['fortumo']['disabled'],
+	'cryptobox' => isset($config['cryptobox']) && $config['cryptobox']['disabled'],
+	'daopay' => isset($config['daopay']) && $config['daopay']['disabled'],
+	'pagseguro' => isset($config['pagseguro']) && $config['pagseguro']['disabled'],
+	'dotpay' => isset($config['dotpay']) && $config['dotpay']['disabled'],
+);
 
-if(empty($action)) {
-	if(!$logged) {
-		$was_before = $config['friendly_urls'];
-		$config['friendly_urls'] = true;
-		
-		echo 'To buy points you need to be logged. ' . generateLink(getLink('?subtopic=accountmanagement') . '&redirect=' . urlencode(BASE_URL . '?subtopic=points'), 'Login') . ' first to make a donate.';
-		
-		$config['friendly_urls'] = $was_before;
+if(isset($_GET['system'])) {
+	$system = $_GET['system'];
+	$to_load = $system;
+
+	if(isset($_GET['redirect'])) {
+		$to_load = $system . '_redirect';
+	}
+
+	if(!ctype_alnum(str_replace(array('-', '_'), '', $_GET['system']))) {
+		error('Error: System contains illegal characters.');
 	}
 	else {
-		echo $twig->render('donate.html.twig', array('is_localhost' => $is_localhost));
+		$file = SYSTEM . 'payments/' . $to_load . '.php';
+		if(file_exists($file) && $enabled[$system]) {
+			require($file);
+		}
 	}
 }
-elseif($action == 'final') {
-	echo $twig->render('donate-final.html.twig');
+else {
+	echo $twig->render('gesior-shop-system/points.html.twig', array('enabled' => $enabled));
 }
 ?>
+<script type="text/javascript">
+$(function() {
+	$('#account-name-input').focus();
+});
+</script>

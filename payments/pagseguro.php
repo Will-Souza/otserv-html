@@ -10,14 +10,15 @@
  * @version   1.1.1
  */
 
-require_once('../common.php');
-require_once(SYSTEM . 'functions.php');
-require_once(SYSTEM . 'init.php');
-require_once(PLUGINS . 'pagseguro/config.php');
-require_once(LIBS . 'PagSeguroLibrary/PagSeguroLibrary.php');
+require_once '../common.php';
+require_once SYSTEM . 'functions.php';
+require_once SYSTEM . 'init.php';
+require_once LIBS . 'shop-system.php';
+require_once PLUGINS . 'gesior-shop-system/config.php';
+require_once LIBS . 'PagSeguroLibrary/PagSeguroLibrary.php';
 
-if(!isset($config['pagSeguro']) || !count($config['pagSeguro']) || !count($config['pagSeguro']['options'])) {
-	echo "PagSeguro is disabled. If you're an admin please configure this script in config.local.php.";
+if(!isset($config['pagseguro']) || !$config['pagseguro']['enabled']) {
+	echo "PagSeguro is disabled. If you're an admin please configure this script in plugins/gesior-shop-system/config.php.";
 	return;
 }
 
@@ -50,15 +51,12 @@ if('post' == strtolower($method)) {
 				$stmt->execute($arrayPDO);
 
 				if ($arrayPDO['status'] == 'PAID') {
-					if ($config['pagSeguro']['doublePoints']) {
+					if ($config['pagseguro']['doublePoints']) {
 						$arrayPDO['item_count'] = $arrayPDO['item_count'] * 2;
 					}
-					
-					$field = 'premium_points';
-					if(strtolower($config['pagSeguro']['donationType']) == 'coins') {
-						$field = 'coins';
-					}
-					
+
+					$field = GesiorShop::getDonationType();
+
 					$stmt = $conn->prepare('UPDATE accounts SET ' . $field . ' = ' . $field . ' + :item_count WHERE ' . (USE_ACCOUNT_NAME ? 'name' : 'id') . ' = :account');
 					$stmt->execute(array('item_count' => $arrayPDO['item_count'], 'account' => $arrayPDO['account']));
 
@@ -73,5 +71,3 @@ if('post' == strtolower($method)) {
 		}
 	}
 }
-
-?>
