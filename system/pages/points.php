@@ -87,6 +87,16 @@ $(function() {
 </div>
 
 <ul>
+    <h2>Valor:</h2>
+    <li><b>1tc</b>= R$1,00</li>
+</ul>
+<ul>
+    <h2>Promoções:</h2>
+    <li>Compras acima de R$25,00 - Double Tibia Coins</li>
+    <li>Compras acima de R$100,00 - Triple Tibia Coins</li>
+</ul>
+
+<ul>
     <h2>Dados:</h2>
     <li><b>Banco:</b> NuBank</li>
     <li><b>Agencia:</b> 0001</li>
