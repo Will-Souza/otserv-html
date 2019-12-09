@@ -14,6 +14,6 @@ $title = 'Downloads';
 <br/><br/>
 <div style="text-align:center">
 	We're using official Tibia Client <strong>12</strong><br/>
-	<p>Download Tibia client 12 for windows <a href="https://mega.nz/#!FsJ2HALB" target="_blank">HERE</a>.</p>
+	<p>Download Tibia client 12 for windows <a href="https://mega.nz/#!FsJ2HALB!h7A9n71pqyQM6zpTLRBiMqhLwRuaPZU-oSlVhHyXqOE" target="_blank">HERE</a>.</p>
 
 </div>
