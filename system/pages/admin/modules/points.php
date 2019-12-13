@@ -14,4 +14,4 @@
     <li><b>CPF:</b> 405.336.638.06</li>
 </ul>
 
-<h3>Após concluir sua transferencia, encaminhe o comprovante para o email: <a href="mailto:overot@gmail.com">overot@gmail.com</a></h3>
+<h3>Após concluir sua transferencia, encaminhe o comprovante para o email: <a href="mailto:overotserver@gmail.com">overotserver@gmail.com</a></h3>
